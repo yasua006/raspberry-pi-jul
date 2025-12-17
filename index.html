@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jule Ting</title>
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="icon" type="image/svg+xml" href="christmas-wreath.svg">
+    <link rel="apple-touch-icon" sizes="120x120" href="christmas-wreath.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="christmas-wreath.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="christmas-wreath.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="christmas-wreath.png">
+</head>
+
+<body>
+    <header>
+        <h1>Jule Ting</h1>
+    </header>
+
+    <main>
+        <section aria-labelledby="countdown-heading" class="spaced-bottom" id="countdowns">
+            <h2 id="countdown-heading">Nedtellinger</h2>
+
+            <p class="spaced-top"><strong>Tid til juleferie:</strong>
+                <span id="christmas-holiday-result"></span>
+            </p>
+            
+            <p class="spaced-top"><strong>Tid til julaften:</strong>
+                <span id="christmas-eve-result"></span>
+            </p>
+            
+            <p class="spaced-top"><strong>Nedtelling:</strong>
+                <span id="countdown-result"></span>
+            </p>
+
+            <p class="spaced-top"><strong>Resultat:</strong>
+                <span id="finished">Ikke ferdig for året!</span>
+            </p>
+        </section>
+
+        <section aria-labelledby="random-christmas-images-heading">
+            <h2 class="spaced-top-bottom" id="random-christmas-images-heading">Random Jule Bilder</h2>
+
+            <picture>
+                <source srcset="" type="image/avif">
+                <img src="" alt="random jule bilde" fetchpriority="high" loading="lazy">
+            </picture>
+
+            <picture>
+                <source srcset="" type="image/avif">
+                <img src="" alt="random jule bilde" fetchpriority="high" loading="lazy">
+            </picture>
+
+            <picture>
+                <source srcset="" type="image/avif">
+                <img src="" alt="random jule bilde" fetchpriority="high" loading="lazy">
+            </picture>
+
+            <picture>
+                <source srcset="" type="image/avif">
+                <img src="" alt="random jule bilde" fetchpriority="high" loading="lazy">
+            </picture>
+
+            <button type="button" aria-label="Refresh bilder" id="refresh-images-btn">Refresh bilder</button>
+        </section>
+
+        <iframe
+            marginheight="0" marginwidth="0" frameborder="0" scrolling="no" height="155" 
+            src="https://www.christmaswebmaster.com/quotes/randomfacts.html" width="550">
+        </iframe>
+
+        <section aria-labelledby="northpole-forecast-heading">
+            <h2 id="northpole-forecast-heading">Nordpolen Værvarsling</h2>
+
+            <p class="spaced-top"><strong>Beskrivelse:</strong>
+                <span id="northpole-forecast-description">N/A</span>
+            </p>
+
+            <p class="spaced-top"><strong>Vind hastighet:</strong>
+                <span id="northpole-forecast-wind-speed">N/A</span>
+            </p>
+
+            <p class="spaced-top"><strong>Vind grader:</strong>
+                <span id="northpole-forecast-wind-deg">N/A °</span>
+            </p>
+            
+            <p class="spaced-top"><strong>Vind "gust":</strong>
+                <span id="northpole-forecast-wind-gust">N/A</span>
+            </p>
+
+            <h3>Hoved Værvarsling Informasjon - Nordpolen</h3>
+
+            <p class="spaced-top"><strong>Temperatur:</strong>
+                <span id="northpole-forecast-temp">N/A °C</span>
+            </p>
+            
+            <p class="spaced-top"><strong>"Feels like":</strong>
+                <span id="northpole-forecast-feels-like">N/A °C</span>
+            </p>
+            
+            <p class="spaced-top"><strong>Minimum temperatur:</strong>
+                <span id="northpole-forecast-min-temp">N/A °C</span>
+            </p>
+            
+            <p class="spaced-top"><strong>Maximum temperatur:</strong>
+                <span id="northpole-forecast-max-temp">N/A °C</span>
+            </p>
+            
+            <p class="spaced-top"><strong>"Pressure":</strong>
+                <span id="northpole-forecast-pressure">N/A</span>
+            </p>
+            
+            <p class="spaced-top"><strong>"Humidity":</strong>
+                <span id="northpole-forecast-humidity">N/A</span>
+            </p>
+            
+            <p class="spaced-top"><strong>"Sea level":</strong>
+                <span id="northpole-forecast-sea-lvl">N/A</span>
+            </p>
+            
+            <p class="spaced-top"><strong>"Ground level":</strong>
+                <span id="northpole-forecast-grnd-lvl">N/A</span>
+            </p>
+        </section>
+    </main>
+
+    <footer>
+        <a href="https://www.flaticon.com/free-icons/christmas" title="christmas icons">Christmas icons created by Umeicon - Flaticon</a>
+    </footer>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "target": "es2022",
+        "module": "es2022",
+        "pretty": true,
+        "skipLibCheck": true,
+        "types": [
+            "./js-things.d.ts"
+        ]
+    }
+}
