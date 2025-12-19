@@ -25,19 +25,19 @@ export declare const debug_info: () => void;
  * @returns {Element | HTMLElement | null}
  * @see Document: querySelector() method: https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector
  */
-export declare const doc_qs: (selectors: keyof HTMLElementTagNameMap) => HTMLElement | HTMLHeadingElement | HTMLObjectElement | HTMLAnchorElement | HTMLAreaElement | HTMLAudioElement | HTMLBaseElement | HTMLQuoteElement | HTMLBodyElement | HTMLBRElement | HTMLButtonElement | HTMLCanvasElement | HTMLTableCaptionElement | HTMLTableColElement | HTMLDataElement | HTMLDataListElement | HTMLModElement | HTMLDetailsElement | HTMLDialogElement | HTMLDivElement | HTMLDListElement | HTMLEmbedElement | HTMLFieldSetElement | HTMLFormElement | HTMLHeadElement | HTMLHRElement | HTMLHtmlElement | HTMLIFrameElement | HTMLImageElement | HTMLInputElement | HTMLLabelElement | HTMLLegendElement | HTMLLIElement | HTMLLinkElement | HTMLMapElement | HTMLMenuElement | HTMLMetaElement | HTMLMeterElement | HTMLOListElement | HTMLOptGroupElement | HTMLOptionElement | HTMLOutputElement | HTMLParagraphElement | HTMLPictureElement | HTMLPreElement | HTMLProgressElement | HTMLScriptElement | HTMLSelectElement | HTMLSlotElement | HTMLSourceElement | HTMLSpanElement | HTMLStyleElement | HTMLTableElement | HTMLTableSectionElement | HTMLTableCellElement | HTMLTemplateElement | HTMLTextAreaElement | HTMLTimeElement | HTMLTitleElement | HTMLTableRowElement | HTMLTrackElement | HTMLUListElement | HTMLVideoElement | null;
+export declare const doc_qs: (selectors: keyof HTMLElementTagNameMap | string) => Element | null;
 /** Shortened version of query selector ALL using the Document
  * @param {keyof HTMLElementTagNameMap | string} selectors
  * @returns {NodeListOf<Element | HTMLElement>}
  * @see Document: querySelectorAll() method: https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll
  */
-export declare const doc_qs_all: (selectors: keyof HTMLElementTagNameMap) => NodeListOf<HTMLElement | HTMLHeadingElement | HTMLObjectElement | HTMLAnchorElement | HTMLAreaElement | HTMLAudioElement | HTMLBaseElement | HTMLQuoteElement | HTMLBodyElement | HTMLBRElement | HTMLButtonElement | HTMLCanvasElement | HTMLTableCaptionElement | HTMLTableColElement | HTMLDataElement | HTMLDataListElement | HTMLModElement | HTMLDetailsElement | HTMLDialogElement | HTMLDivElement | HTMLDListElement | HTMLEmbedElement | HTMLFieldSetElement | HTMLFormElement | HTMLHeadElement | HTMLHRElement | HTMLHtmlElement | HTMLIFrameElement | HTMLImageElement | HTMLInputElement | HTMLLabelElement | HTMLLegendElement | HTMLLIElement | HTMLLinkElement | HTMLMapElement | HTMLMenuElement | HTMLMetaElement | HTMLMeterElement | HTMLOListElement | HTMLOptGroupElement | HTMLOptionElement | HTMLOutputElement | HTMLParagraphElement | HTMLPictureElement | HTMLPreElement | HTMLProgressElement | HTMLScriptElement | HTMLSelectElement | HTMLSlotElement | HTMLSourceElement | HTMLSpanElement | HTMLStyleElement | HTMLTableElement | HTMLTableSectionElement | HTMLTableCellElement | HTMLTemplateElement | HTMLTextAreaElement | HTMLTimeElement | HTMLTitleElement | HTMLTableRowElement | HTMLTrackElement | HTMLUListElement | HTMLVideoElement>;
+export declare const doc_qs_all: (selectors: keyof HTMLElementTagNameMap | string) => NodeListOf<Element>;
 /** Show an error message in the console
  * @param {string} err_msg
  * @param {Err_Lvl} err_lvl - A string choice
  * @returns {void}
  * @throws {Error} - If provided error message is invalid
- * @throws {Error} - Intentional: If string choice is "fatal"
+ * @throws {Error} - If provided error level is invalid
  * @typedef {"error" | "fatal"} Err_Lvl
  */
 export declare const show_err: (err_msg: string, err_lvl: Err_Lvl) => void;
@@ -53,9 +53,9 @@ export declare const show_err: (err_msg: string, err_lvl: Err_Lvl) => void;
 export declare const wait: (time_in_ms: number, abort?: AbortSignal | undefined) => Promise<void>;
 /** Handles accessibility for animations disabled on browsers
  * @param {string} css_selectors
- * @param {Style_Lvl | undefined} [style_lvl] - Optional: A choice between internal styles, or an external stylesheet. If missing, defaults to internal styles, all animations
+ * @param {Style_Lvl | undefined} [style_lvl] - Optional: A choice between internal styles, or an external stylesheet. Defaults to internal styles, all animations.
  * @returns {void}
- * @throws {Error} - If provided CSS selectors are invalid
+ * @throws {Error} - If provided CSS selectors are invalid or empty
  * @typedef {"internal" | CSSStyleSheet} Style_Lvl
  * @example js_things.animations_accessibility("body, body *", "internal");
  */
@@ -64,9 +64,7 @@ export declare const animations_accessibility: (css_selectors: string, style_lvl
  * @param {HTMLElement} section
  * @param {HTMLHeadingElement} heading - A child of the same section, which describes the section
  * @returns {void}
- * @throws {Error} - If provided section is invalid
- * @throws {Error} - If provided heading is invalid
- * @throws {Error} - If provided section id is invalid
+ * @throws {Error} - If provided section or heading is invalid
  * @example js_things.section_accessibility(section, heading_two);
  */
 export declare const section_accessibility: (section: HTMLElement, heading: HTMLHeadingElement) => void;

@@ -36,16 +36,23 @@ body, body * {
     background-color: var(--background-color);
     color: var(--text-color)
 }
+header h1, footer {
+    text-align: center
+}
 header h1 {
     border-bottom: 0.25rem solid var(--background-color);
-    font-size: 40px;
-    text-align: center
+    font-size: 40px
 }
 h2 {
     font-size: 32px
 }
 h3 {
     font-size: 24px
+}
+@supports (text-wrap: balance) {
+    header h1, h2, h3 {
+        text-wrap: balance
+    }
 }
 .spaced-bottom {
     margin-bottom: 2rem
@@ -81,11 +88,7 @@ button, main section#countdowns span#countdown-result {
     background-color: var(--accent)
 }
 main section#countdowns span#countdown-result {
-    border: 0.1rem solid var(--background-color);
-    text-align: center
-}
-footer {
-    text-align: center
+    border: 0.1rem solid var(--background-color)
 }
 @media (prefers-color-scheme: dark) {
     /* 60-30-10 rule, flipped bg with fg, and changed accent for WCAG compliance */

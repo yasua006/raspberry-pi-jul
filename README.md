@@ -1,3 +1,3 @@
 # raspberry-pi-jul
 
-- Public key blir ofte brukt på en server. For gjenskap, bruk server!
+- Public "key" for OpenWeather API blir ofte brukt på en server for sikkerhet.For gjenskap, bruk server!

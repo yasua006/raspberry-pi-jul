@@ -1,12 +1,12 @@
 import * as js_things from "js-things";
 
 document.addEventListener("DOMContentLoaded", () => {
-    class Countdown {
+    class Countdowns {
         #christmas_month: number;
         #christmas_holiday_start_day: number;
         #christmas_eve_day: number;
 
-        #main: HTMLElement | null;
+        #main: HTMLElement | Element | null;
 
         #christmas_holiday_result: HTMLSpanElement | null;
         #christmas_eve_result: HTMLSpanElement | null;
@@ -59,8 +59,8 @@ document.addEventListener("DOMContentLoaded", () => {
             let month_text: string = "måned";
             let day_text: string = "dag";
 
-            if (current_month < this.#christmas_month) {
-                text_element.textContent = "Kommer senere!";
+            if (current_month > this.#christmas_month) {
+                text_element.textContent = "Ferdig!";
                 return;
             }
 
@@ -121,6 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
             this.#show_results(current_year, current_month, current_day, current_hours, current_minutes, current_seconds);
         }
 
+
         #rnd_christmas_images(): void {
             this.#main.querySelectorAll("section picture source, section picture img").forEach(elem => {
                 const img_folder: string = "images";
@@ -148,6 +149,26 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
+    const np_text_helper = async(np_elem: Element | null, np_text: string): Promise<void> => {
+        if (!(np_elem instanceof Element) || !np_elem) {
+            js_things.show_err("Invalid northpole forecast element!", "fatal");
+        }
+        if (!np_text) {
+            js_things.show_err("Invalid northpole forecast text!", "fatal");
+        }
+
+        if (np_text.includes("_")) {
+            console.warn("Unexpected northpole forecast id! Replacing underscores with hyphens...");
+
+            np_text = np_text.replaceAll("_", "-");
+        }
+
+        const default_text: string = "N/A";
+
+        np_elem.textContent = np_text ?? default_text;
+    }
+
+
     const show_northpole_forecast = async(): Promise<any> => {
         try {
             const res: Response = await fetch("https://api.openweathermap.org/data/2.5/weather?lat=90&lon=0&units=metric&lang=no&appid=280de22897de4654c3bdbc2838e18aea");
@@ -158,60 +179,48 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const data = await res.json();
 
-            interface Northpole_Forecast_Elements {
-                [key: string]: HTMLSpanElement | null
+            let weather_desc: string = data.weather[0].description;
+            weather_desc = weather_desc.replaceAll("", "");
+
+            const wind_speed_text: string = `${data.wind.speed} m/s`;
+            const wind_deg_text: string = `${data.wind.deg} °`;
+            const temp_text: string = `${data.main.temp} °C`;
+            const feels_like_text: string = `${data.main.feels_like} °C`;
+            const min_temp_text: string = `${data.main.temp_min} °C`;
+            const max_temp_text: string = `${data.main.temp_max} °C`;
+
+            interface NF_Elements {
+                [key: string]: Element | null
             };
 
-            const northpole_forecast_elements: Northpole_Forecast_Elements = {
-                northpole_forecast_desc: document.querySelector('#northpole-forecast-description'),
-                northpole_forecast_wind_speed: document.querySelector('#northpole-forecast-wind-speed'),
-                northpole_forecast_wind_deg: document.querySelector('#northpole-forecast-wind-deg'),
-                northpole_forecast_wind_gust: document.querySelector('#northpole-forecast-wind-gust'),
-                northpole_forecast_temp: document.querySelector('#northpole-forecast-temp'),
-                northpole_forecast_feels_like: document.querySelector('#northpole-forecast-feels-like'),
-                northpole_forecast_min_temp: document.querySelector('#northpole-forecast-min-temp'),
-                northpole_forecast_max_temp: document.querySelector('#northpole-forecast-max-temp'),
-                northpole_forecast_pressure: document.querySelector('#northpole-forecast-pressure'),
-                northpole_forecast_humidity: document.querySelector('#northpole-forecast-humidity'),
-                northpole_forecast_sea_level: document.querySelector('#northpole-forecast-sea-lvl'),
-                northpole_forecast_grnd_level: document.querySelector('#northpole-forecast-grnd-lvl')
-            };
+            const nf_elements: NF_Elements = {};
 
-            if (
-                (!northpole_forecast_elements.northpole_forecast_desc || !northpole_forecast_elements.northpole_forecast_wind_speed) || (!northpole_forecast_elements.northpole_forecast_wind_deg || !northpole_forecast_elements.northpole_forecast_wind_gust) || (!northpole_forecast_elements.northpole_forecast_temp || !northpole_forecast_elements.northpole_forecast_feels_like) || (!northpole_forecast_elements.northpole_forecast_min_temp || !northpole_forecast_elements.northpole_forecast_max_temp) || (!northpole_forecast_elements.northpole_forecast_pressure || !northpole_forecast_elements.northpole_forecast_humidity) || (!northpole_forecast_elements.northpole_forecast_sea_level || !northpole_forecast_elements.northpole_forecast_grnd_level)
-            ) {
-                js_things.show_err("No elements for northpole weather!", "fatal");
+            for (const nf_elem of js_things.doc_qs_all("main section#nf span")) {
+                if (!nf_elem.id) {
+                    js_things.show_err("No span id!", "fatal");
+                }
+
+                nf_elements[nf_elem.id] = nf_elem;
             }
 
-            let weather_desc: string = data.weather[0].description;
-            weather_desc = weather_desc.replace(/"/g, "");
+            if (Object.keys(nf_elements).length === 0 || Object.values(nf_elements).length === 0) {
+                js_things.show_err("No northpole elements!", "fatal");
+            }
 
-            const get_wind_speed: number | undefined = data.wind.speed;
-            const get_wind_deg: number | undefined = data.wind.deg;
-            const get_temp: number | undefined = data.main.temp;
-            const get_feels_like: number | undefined = data.main.feels_like;
-            const get_min_temp: number | undefined = data.main.temp_min;
-            const get_max_temp: number | undefined = data.main.temp_max;
+            const start_path: string = "nf-";
 
-            const wind_speed_text: string = `${get_wind_speed} m/s`;
-            const wind_deg_text: string = `${get_wind_deg} °`;
-            const temp_text: string = `${get_temp} °C`;
-            const feels_like_text: string = `${get_feels_like} °C`;
-            const min_temp_text: string = `${get_min_temp} °C`;
-            const max_temp_text: string = `${get_max_temp} °C`;
-
-            northpole_forecast_elements.northpole_forecast_desc.textContent = weather_desc ?? "N/A";
-            northpole_forecast_elements.northpole_forecast_wind_speed.textContent = wind_speed_text ?? "N/A m/s";
-            northpole_forecast_elements.northpole_forecast_wind_deg.textContent = wind_deg_text ?? "N/A °";
-            northpole_forecast_elements.northpole_forecast_wind_gust.textContent = data.wind.gust ?? "N/A";
-            northpole_forecast_elements.northpole_forecast_temp.textContent = temp_text ?? "N/A °C";
-            northpole_forecast_elements.northpole_forecast_feels_like.textContent = feels_like_text ?? "N/A °C";
-            northpole_forecast_elements.northpole_forecast_min_temp.textContent = min_temp_text ?? "N/A °C";
-            northpole_forecast_elements.northpole_forecast_max_temp.textContent = max_temp_text ?? "N/A °C";
-            northpole_forecast_elements.northpole_forecast_pressure.textContent = data.main.pressure ?? "N/A";
-            northpole_forecast_elements.northpole_forecast_humidity.textContent = data.main.humidity ?? "N/A";
-            northpole_forecast_elements.northpole_forecast_sea_level.textContent = data.main.sea_level ?? "N/A";
-            northpole_forecast_elements.northpole_forecast_grnd_level.textContent = data.main.grnd_level ?? "N/A";
+            await np_text_helper(nf_elements[`${start_path}desc`], weather_desc);
+            await np_text_helper(nf_elements[`${start_path}wind-speed`], wind_speed_text);
+            await np_text_helper(nf_elements[`${start_path}wind-deg`], wind_deg_text);
+            await np_text_helper(nf_elements[`${start_path}wind-gust`], String(data.wind.gust));
+            await np_text_helper(nf_elements[`${start_path}temp`], temp_text);
+            await np_text_helper(nf_elements[`${start_path}feels-like`], feels_like_text);
+            await np_text_helper(nf_elements[`${start_path}min-temp`], min_temp_text);
+            await np_text_helper(nf_elements[`${start_path}max-temp`], max_temp_text);
+            await np_text_helper(nf_elements[`${start_path}pressure`], data.main.pressure.toString());
+            await np_text_helper(nf_elements[`${start_path}humidity`], data.main.humidity.toString());
+            await np_text_helper(nf_elements[`${start_path}sea-lvl`], data.main.sea_level.toString());
+            await np_text_helper(nf_elements[`${start_path}grnd-lvl`], data.main.grnd_level.toString());
         } catch (err) {
             js_things.show_err(`Cannot fetch the weather API: ${err}`, "fatal");
         }
@@ -219,6 +228,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     show_northpole_forecast();
 
-    js_things.animations_accessibility("body, body *", "internal");
-    new Countdown();
+    js_things.animations_accessibility("abc");
+    new Countdowns();
 });
