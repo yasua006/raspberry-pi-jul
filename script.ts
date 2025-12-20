@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
         #christmas_holiday_start_day: number;
         #christmas_eve_day: number;
 
-        #main: HTMLElement | Element | null;
+        #main: HTMLElement | null;
 
         #christmas_holiday_result: HTMLSpanElement | null;
         #christmas_eve_result: HTMLSpanElement | null;
