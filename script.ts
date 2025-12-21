@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
             this.#christmas_month = 11; // starts from 0
             this.#christmas_holiday_start_day = 22;
             this.#christmas_eve_day = 24;
-            
+
             this.#main = js_things.doc_qs('main');
 
             if (!this.#main) {
@@ -51,44 +51,30 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
 
-        #result_helper(current_month: number, current_day: number, target_day: number, text_element: HTMLSpanElement | null): void {
+        #result_helper(target_date: Date, text_element: HTMLSpanElement | null): void {
             if (!text_element) {
                 js_things.show_err("No text element given!", "fatal");
             }
 
-            let month_text: string = "måned";
-            let day_text: string = "dag";
+            const now: Date = new Date();
+            const ms_per_day: number = 24 * 60 * 60 * 1000;
+            const days_left: number = Math.ceil((target_date.getTime() - now.getTime()) / ms_per_day);
 
-            if (current_month > this.#christmas_month) {
-                text_element.textContent = "Ferdig!";
-                return;
-            }
+            let day_text: string = "";
 
-            if (Number(this.#christmas_month - current_month) > 1) {
-                month_text = `${this.#christmas_month - current_month} måneder og`;
-            } else if (Number(this.#christmas_month - current_month) === 1) {
-                month_text = `${this.#christmas_month - current_month} måned og`;
+            if (days_left > 1) {
+                day_text = `${days_left} dager igjen!`;
+            } else if ((days_left) === 1) {
+                day_text = `${days_left} dag igjen!`;
+            } else if (days_left === 0) {
+                day_text = "I dag!";
             } else {
-                month_text = "";
+                day_text = "Ferdig!";
             }
 
-            if (target_day - current_day > 1) {
-                day_text = `${target_day - current_day} dager igjen!`;
-            } else if ((target_day - current_day) === 1) {
-                day_text = `${target_day - current_day} dag igjen!`;
-            } else {
-                day_text = "";
-            }
+            text_element.textContent = `${day_text}`;
 
-            text_element.textContent = `${month_text} ${day_text}`;
-            
-            if (this.#christmas_month - current_month === 0 && (target_day - current_day) === 0) {
-                text_element.textContent = "I dag!";
-            } else if (this.#christmas_month - current_month === 0 && (current_day >= target_day)) {
-                text_element.textContent = "Ferdig!";
-            }
-
-            if (this.#christmas_month - current_month === 0 && (current_day >= this.#christmas_eve_day)) {
+            if (days_left < 0) {
                 this.#finished.textContent = "Ferdig for året!";
             }
         }
@@ -99,10 +85,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 js_things.show_err("No christmas element!", "fatal");
             }
 
+            const xmas_holiday_date: Date = new Date(current_year, this.#christmas_month, 
+            this.#christmas_holiday_start_day,
+            0, 0, 0);
+            const xmas_eve_date: Date = new Date(current_year, this.#christmas_month, 
+            this.#christmas_eve_day,
+            0, 0, 0);
+
+            if (isNaN(xmas_holiday_date.getTime()) || isNaN(xmas_eve_date.getTime())) {
+                js_things.show_err("Invalid date!", "fatal");
+            }
+
             // christmas holiday
-            this.#result_helper(current_month, current_day, this.#christmas_holiday_start_day, this.#christmas_holiday_result);
+            this.#result_helper(xmas_holiday_date, this.#christmas_holiday_result);
             // christmas eve
-            this.#result_helper(current_month, current_day, this.#christmas_eve_day, this.#christmas_eve_result);
+            this.#result_helper(xmas_eve_date, this.#christmas_eve_result);
             
             // countdown
             this.#countdown_result.textContent = `Dato: ${current_year}.${current_month + 1}.${current_day} Klokke: ${current_hours.toString().padStart(2, "0")}:${current_minutes.toString().padStart(2, "0")}:${current_seconds.toString().padStart(2, "0")}`;
@@ -111,12 +108,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
         #handle_results(): void {
             const new_date: Date = new Date();
-            const current_year: number = new_date.getFullYear();
+            let current_year: number = new_date.getFullYear();
             const current_month: number = new_date.getMonth();
             const current_day: number = new_date.getDate();
             const current_hours: number = new_date.getHours();
             const current_minutes: number = new_date.getMinutes();
             const current_seconds: number = new_date.getSeconds();
+
+            if (current_month > this.#christmas_month || (current_month === this.#christmas_month && current_day > this.#christmas_eve_day)) {
+                current_year += 1;
+            }
 
             this.#show_results(current_year, current_month, current_day, current_hours, current_minutes, current_seconds);
         }
