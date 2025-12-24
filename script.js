@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 day_text = "Ferdig!";
             }
             text_element.textContent = `${day_text}`;
-            if (days_left < 0) {
+            if (new Date().getDate() > this.#christmas_eve_day) {
                 this.#finished.textContent = "Ferdig for året!";
             }
         }
