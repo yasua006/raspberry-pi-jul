@@ -84,10 +84,10 @@ button {
         filter: brightness(1.2)
     }
 }
-button, main section#countdowns span#countdown-result {
+button, main section#countdowns span#date-clock-result {
     background-color: var(--accent)
 }
-main section#countdowns span#countdown-result {
+main section#countdowns span#date-clock-result {
     border: 0.1rem solid var(--background-color)
 }
 @media (prefers-color-scheme: dark) {
@@ -110,7 +110,7 @@ main section#countdowns span#countdown-result {
             filter: brightness(0.8)
         }
     }
-    button, main section#countdowns span#countdown-result {
+    button, main section#countdowns span#date-clock-result {
         background-color: var(--accent)
     }
 }

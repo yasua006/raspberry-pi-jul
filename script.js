@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
         #main;
         #christmas_holiday_result;
         #christmas_eve_result;
-        #countdown_result;
+        #date_clock_result;
         #finished;
         #refresh_images_btn;
         constructor() {
@@ -20,8 +20,9 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             this.#christmas_holiday_result = this.#main.querySelector('section#countdowns span#christmas-holiday-result');
             this.#christmas_eve_result = this.#main.querySelector('section#countdowns span#christmas-eve-result');
-            this.#countdown_result = this.#main.querySelector('section#countdowns span#countdown-result');
+            this.#date_clock_result = this.#main.querySelector('section#countdowns span#date-clock-result');
             this.#finished = this.#main.querySelector('section#countdowns span#finished');
+            // shows the date and clock before the delay
             this.#handle_results();
             setInterval(() => {
                 this.#handle_results();
@@ -61,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
         #show_results(current_year, current_month, current_day, current_hours, current_minutes, current_seconds) {
-            if ((!this.#christmas_holiday_result || !this.#christmas_eve_result) || !this.#countdown_result) {
+            if ((!this.#christmas_holiday_result || !this.#christmas_eve_result) || !this.#date_clock_result) {
                 js_things.show_err("No christmas element!", "fatal");
             }
             const xmas_holiday_date = new Date(current_year, this.#christmas_month, this.#christmas_holiday_start_day, 0, 0, 0);
@@ -74,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // christmas eve
             this.#result_helper(xmas_eve_date, this.#christmas_eve_result);
             // countdown
-            this.#countdown_result.textContent = `Dato: ${current_year}.${current_month + 1}.${current_day} Klokke: ${current_hours.toString().padStart(2, "0")}:${current_minutes.toString().padStart(2, "0")}:${current_seconds.toString().padStart(2, "0")}`;
+            this.#date_clock_result.textContent = `Dato: ${current_year}.${current_month + 1}.${current_day} Klokke: ${current_hours.toString().padStart(2, "0")}:${current_minutes.toString().padStart(2, "0")}:${current_seconds.toString().padStart(2, "0")}`;
         }
         #handle_results() {
             const new_date = new Date();
@@ -95,7 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const image_count = 13;
                 let number_choice = Math.round(Math.random() * image_count);
                 if (number_choice > image_count) {
-                    console.warn("Random higher than image count!");
+                    js_things.show_msg({ value: "warn" }, "Random higher than image count!");
                     return;
                 }
                 if (number_choice === 0) {
@@ -118,7 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
             js_things.show_err("Invalid northpole forecast text!", "fatal");
         }
         if (np_text.includes("_")) {
-            console.warn("Unexpected northpole forecast id! Replacing underscores with hyphens...");
+            js_things.show_msg({ value: "warn" }, "Unexpected northpole forecast id! Replacing underscores with hyphens...");
             np_text = np_text.replaceAll("_", "-");
         }
         const default_text = "N/A";

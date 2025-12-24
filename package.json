@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "js-things": "^0.6.0",
+    "js-things": "^0.7.1",
     "typescript": "^5.9.3"
   }
 }
