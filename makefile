@@ -1,4 +1,7 @@
-script.js: script.ts
+source=script.js
+target=script.ts
+
+$(source): $(target)
 	npx tsc
 
-update: script.ts
+update: $(target)

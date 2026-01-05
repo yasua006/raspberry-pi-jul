@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 this.#handle_results();
             }, 1000);
 
-            this.#rnd_christmas_images();
+            this.#rnd_xmas_images();
 
             this.#refresh_images_btn = this.#main.querySelector("section button#refresh-images-btn");
 
@@ -47,12 +47,12 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             this.#refresh_images_btn.addEventListener("click", () => {
-                this.#rnd_christmas_images();
+                this.#rnd_xmas_images();
             }, {passive: true});
         }
 
 
-        #result_helper(target_date: Date, text_element: HTMLSpanElement | null): void {
+        #upd_result(target_date: Date, text_element: HTMLSpanElement | null): void {
             if (!text_element) {
                 js_things.show_err("No text element given!", "fatal");
             }
@@ -98,9 +98,9 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             // christmas holiday
-            this.#result_helper(xmas_holiday_date, this.#christmas_holiday_result);
+            this.#upd_result(xmas_holiday_date, this.#christmas_holiday_result);
             // christmas eve
-            this.#result_helper(xmas_eve_date, this.#christmas_eve_result);
+            this.#upd_result(xmas_eve_date, this.#christmas_eve_result);
             
             // countdown
             this.#date_clock_result.textContent = `Dato: ${current_year}.${current_month + 1}.${current_day} Klokke: ${current_hours.toString().padStart(2, "0")}:${current_minutes.toString().padStart(2, "0")}:${current_seconds.toString().padStart(2, "0")}`;
@@ -109,12 +109,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         #handle_results(): void {
             const new_date: Date = new Date();
-            let current_year: number = new_date.getFullYear();
             const current_month: number = new_date.getMonth();
             const current_day: number = new_date.getDate();
             const current_hours: number = new_date.getHours();
             const current_minutes: number = new_date.getMinutes();
             const current_seconds: number = new_date.getSeconds();
+
+            let current_year: number = new_date.getFullYear();
 
             if (current_month > this.#christmas_month || (current_month === this.#christmas_month && current_day > this.#christmas_eve_day)) {
                 current_year += 1;
@@ -124,7 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
 
-        #rnd_christmas_images(): void {
+        #rnd_xmas_images(): void {
             this.#main.querySelectorAll("section picture source, section picture img").forEach(elem => {
                 const img_folder: string = "images";
 
@@ -151,7 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    const np_text_helper = async(np_elem: Element | null, np_text: string): Promise<void> => {
+    const upd_np_text = async(np_elem: Element | null, np_text: string): Promise<void> => {
         if (!(np_elem instanceof Element) || !np_elem) {
             js_things.show_err("Invalid northpole forecast element!", "fatal");
         }
@@ -211,18 +212,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const start_path: string = "nf-";
 
-            await np_text_helper(nf_elements[`${start_path}desc`], weather_desc);
-            await np_text_helper(nf_elements[`${start_path}wind-speed`], wind_speed_text);
-            await np_text_helper(nf_elements[`${start_path}wind-deg`], wind_deg_text);
-            await np_text_helper(nf_elements[`${start_path}wind-gust`], String(data.wind.gust));
-            await np_text_helper(nf_elements[`${start_path}temp`], temp_text);
-            await np_text_helper(nf_elements[`${start_path}feels-like`], feels_like_text);
-            await np_text_helper(nf_elements[`${start_path}min-temp`], min_temp_text);
-            await np_text_helper(nf_elements[`${start_path}max-temp`], max_temp_text);
-            await np_text_helper(nf_elements[`${start_path}pressure`], data.main.pressure.toString());
-            await np_text_helper(nf_elements[`${start_path}humidity`], data.main.humidity.toString());
-            await np_text_helper(nf_elements[`${start_path}sea-lvl`], data.main.sea_level.toString());
-            await np_text_helper(nf_elements[`${start_path}grnd-lvl`], data.main.grnd_level.toString());
+            await upd_np_text(nf_elements[`${start_path}desc`], weather_desc);
+            await upd_np_text(nf_elements[`${start_path}wind-speed`], wind_speed_text);
+            await upd_np_text(nf_elements[`${start_path}wind-deg`], wind_deg_text);
+            await upd_np_text(nf_elements[`${start_path}wind-gust`], String(data.wind.gust));
+            await upd_np_text(nf_elements[`${start_path}temp`], temp_text);
+            await upd_np_text(nf_elements[`${start_path}feels-like`], feels_like_text);
+            await upd_np_text(nf_elements[`${start_path}min-temp`], min_temp_text);
+            await upd_np_text(nf_elements[`${start_path}max-temp`], max_temp_text);
+            await upd_np_text(nf_elements[`${start_path}pressure`], data.main.pressure.toString());
+            await upd_np_text(nf_elements[`${start_path}humidity`], data.main.humidity.toString());
+            await upd_np_text(nf_elements[`${start_path}sea-lvl`], data.main.sea_level.toString());
+            await upd_np_text(nf_elements[`${start_path}grnd-lvl`], data.main.grnd_level.toString());
         } catch (err) {
             js_things.show_err(`Cannot fetch the weather API: ${err}`, "fatal");
         }
@@ -231,5 +232,6 @@ document.addEventListener("DOMContentLoaded", () => {
     show_northpole_forecast();
 
     js_things.animations_accessibility("abc");
+
     new Countdowns();
 });
