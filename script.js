@@ -61,15 +61,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 this.#finished.textContent = "Ferdig for året!";
             }
         }
+        #create_target_date(year, month, month_day) {
+            return new Date(year, month, month_day, 0, 0, 0);
+        }
+        #handle_nan(date_1, date_2) {
+            if (isNaN(date_1.getTime()) || isNaN(date_2.getTime())) {
+                js_things.show_err("Invalid date!", "fatal");
+            }
+        }
         #show_results(current_year, current_month, current_day, current_hours, current_minutes, current_seconds) {
             if ((!this.#christmas_holiday_result || !this.#christmas_eve_result) || !this.#date_clock_result) {
                 js_things.show_err("No christmas element!", "fatal");
             }
-            const xmas_holiday_date = new Date(current_year, this.#christmas_month, this.#christmas_holiday_start_day, 0, 0, 0);
-            const xmas_eve_date = new Date(current_year, this.#christmas_month, this.#christmas_eve_day, 0, 0, 0);
-            if (isNaN(xmas_holiday_date.getTime()) || isNaN(xmas_eve_date.getTime())) {
-                js_things.show_err("Invalid date!", "fatal");
-            }
+            const xmas_holiday_date = this.#create_target_date(current_year, this.#christmas_month, this.#christmas_holiday_start_day);
+            const xmas_eve_date = this.#create_target_date(current_year, this.#christmas_month, this.#christmas_eve_day);
+            this.#handle_nan(xmas_holiday_date, xmas_eve_date);
             // christmas holiday
             this.#upd_result(xmas_holiday_date, this.#christmas_holiday_result);
             // christmas eve
@@ -90,15 +96,18 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             this.#show_results(current_year, current_month, current_day, current_hours, current_minutes, current_seconds);
         }
+        #warn_on_unexpected_higher(num_to_check, image_count) {
+            if (num_to_check > image_count) {
+                js_things.show_msg({ value: "warn" }, "Random higher than image count!");
+                return;
+            }
+        }
         #rnd_xmas_images() {
             this.#main.querySelectorAll("section picture source, section picture img").forEach(elem => {
                 const img_folder = "images";
                 const image_count = 13;
                 let number_choice = Math.round(Math.random() * image_count);
-                if (number_choice > image_count) {
-                    js_things.show_msg({ value: "warn" }, "Random higher than image count!");
-                    return;
-                }
+                this.#warn_on_unexpected_higher(number_choice, image_count);
                 if (number_choice === 0) {
                     number_choice = Math.round(Math.random() * image_count);
                 }
@@ -112,11 +121,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
     const upd_np_text = async (np_elem, np_text) => {
-        if (!(np_elem instanceof Element) || !np_elem) {
+        if (!(np_elem instanceof Element)) {
             js_things.show_err("Invalid northpole forecast element!", "fatal");
-        }
-        if (!np_text) {
-            js_things.show_err("Invalid northpole forecast text!", "fatal");
         }
         if (np_text.includes("_")) {
             js_things.show_msg({ value: "warn" }, "Unexpected northpole forecast id! Replacing underscores with hyphens...");
